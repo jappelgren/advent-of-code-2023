@@ -41,6 +41,18 @@ func FirstStar(f []byte) (int, error) {
 func SecondStar(f []byte) (int, error) {
 	res := 0
 	numStore := []int{}
+	numMap := map[string]int{
+		"zero":  0,
+		"one":   1,
+		"two":   2,
+		"three": 3,
+		"four":  4,
+		"five":  5,
+		"six":   6,
+		"seven": 7,
+		"eight": 8,
+		"nine":  9,
+	}
 
 	for i := range f {
 		var three string
@@ -58,67 +70,23 @@ func SecondStar(f []byte) (int, error) {
 		}
 
 		switch f[i] {
-		case 'e':
-			if five == "eight" {
-				numStore = append(numStore, 8)
-			}
-		case 'f':
-			if four == "four" {
-				numStore = append(numStore, 4)
-			}
-			if four == "five" {
-				numStore = append(numStore, 5)
-			}
-		case 'n':
-			if four == "nine" {
-				numStore = append(numStore, 9)
-			}
-		case 'o':
-			if three == "one" {
-				numStore = append(numStore, 1)
-			}
-		case 's':
-			if three == "six" {
-				numStore = append(numStore, 6)
-			}
-			if five == "seven" {
-				numStore = append(numStore, 7)
-			}
-		case 't':
-			if three == "two" {
-				numStore = append(numStore, 2)
-			}
-			if five == "three" {
-				numStore = append(numStore, 3)
-			}
-		case 'z':
-			if four == "zero" {
-				numStore = append(numStore, 0)
-			}
-		case '0':
-			numStore = append(numStore, 0)
-		case '1':
-			numStore = append(numStore, 1)
-		case '2':
-			numStore = append(numStore, 2)
-		case '3':
-			numStore = append(numStore, 3)
-		case '4':
-			numStore = append(numStore, 4)
-		case '5':
-			numStore = append(numStore, 5)
-		case '6':
-			numStore = append(numStore, 6)
-		case '7':
-			numStore = append(numStore, 7)
-		case '8':
-			numStore = append(numStore, 8)
-		case '9':
-			numStore = append(numStore, 9)
+		case '0', '1', '2', '3', '4', '5', '6', '7', '8', '9':
+			numStore = append(numStore, int(f[i]-48))
 		case 10:
 			res += numStore[0]*10 + numStore[len(numStore)-1]
 			numStore = []int{}
+		default:
+			if v, ok := numMap[three]; ok {
+				numStore = append(numStore, v)
+			}
+			if v, ok := numMap[four]; ok {
+				numStore = append(numStore, v)
+			}
+			if v, ok := numMap[five]; ok {
+				numStore = append(numStore, v)
+			}
 		}
+
 	}
 	fmt.Println(numStore)
 	return res, nil
