@@ -39,7 +39,7 @@ func FirstStar(f []byte) (int, error) {
 }
 
 func SecondStar(f []byte) (int, error) {
-	res := 0
+	var res int
 	numStore := []int{}
 	numMap := map[string]int{
 		"zero":  0,
@@ -55,19 +55,9 @@ func SecondStar(f []byte) (int, error) {
 	}
 
 	for i := range f {
-		var three string
-		var four string
-		var five string
-
-		if remaining := len(f) - i; remaining >= 5 {
-			five = string(f[i : i+5])
-		}
-		if remaining := len(f) - i; remaining >= 4 {
-			four = string(f[i : i+4])
-		}
-		if remaining := len(f) - i; remaining >= 3 {
-			three = string(f[i : i+3])
-		}
+		three := numWordBuilder(f, i, 3)
+		four := numWordBuilder(f, i, 4)
+		five := numWordBuilder(f, i, 5)
 
 		switch f[i] {
 		case '0', '1', '2', '3', '4', '5', '6', '7', '8', '9':
@@ -89,4 +79,12 @@ func SecondStar(f []byte) (int, error) {
 
 	}
 	return res, nil
+}
+
+func numWordBuilder(f []byte, idx int, l int) string {
+	var numWord string
+	if remaining := len(f) - idx; remaining >= l {
+		numWord = string(f[idx : idx+l])
+	}
+	return numWord
 }
