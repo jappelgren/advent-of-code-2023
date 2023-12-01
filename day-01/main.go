@@ -88,6 +88,5 @@ func SecondStar(f []byte) (int, error) {
 		}
 
 	}
-	fmt.Println(numStore)
 	return res, nil
 }
