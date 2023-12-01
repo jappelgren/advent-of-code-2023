@@ -7,7 +7,7 @@ import (
 func TestFirstStar(t *testing.T) {
 	input := "sample.txt"
 	want := 142
-	parsed := ParseFile(input)
+	parsed := ParseFileToBytes(input)
 	res, err := FirstStar(parsed)
 
 	if res != want || err != nil {
