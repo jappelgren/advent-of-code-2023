@@ -10,14 +10,14 @@ func main() {
 		fmt.Printf(`An error occured... somehow: %v`, err)
 		return
 	}
-	fmt.Println(first)
+	fmt.Printf(`First Star Result: %v%v`, first, "\r\n")
 
 	second, err := SecondStar(f)
 	if err != nil {
 		fmt.Printf(`An error occured... somehow: %v`, err)
 		return
 	}
-	fmt.Println(second)
+	fmt.Printf(`Second Star Result: %v%v`, second, "\r\n")
 }
 
 func FirstStar(f []byte) (int, error) {
