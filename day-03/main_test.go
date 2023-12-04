@@ -36,6 +36,30 @@ func TestFirstStar(t *testing.T) {
 	if res != want {
 		t.Fatalf(`Expected FirstStar(%v) to equal %v, instead got %v.%v`, input, want, res, "\r\n")
 	}
+	
+	input = ParseFileToBytes("example5.txt")
+	want = 62
+	res = FirstStar(input)
+
+	if res != want {
+		t.Fatalf(`Expected FirstStar(%v) to equal %v, instead got %v.%v`, input, want, res, "\r\n")
+	}
+
+	input = ParseFileToBytes("example6.txt")
+	want = 156
+	res = FirstStar(input)
+
+	if res != want {
+		t.Fatalf(`Expected FirstStar(%v) to equal %v, instead got %v.%v`, input, want, res, "\r\n")
+	}
+
+	input = ParseFileToBytes("example7.txt")
+	want = 635
+	res = FirstStar(input)
+
+	if res != want {
+		t.Fatalf(`Expected FirstStar(%v) to equal %v, instead got %v.%v`, input, want, res, "\r\n")
+	}
 }
 
 func TestFindAdjacentIndices(t *testing.T) {

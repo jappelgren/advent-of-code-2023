@@ -41,7 +41,6 @@ func FirstStar(f []byte) (res int) {
 
 	var nextToSymbol bool
 	var numStr string
-	curRow := 1
 
 	for i, v := range noLBs {
 		if by := v - 48; by >= 0 && by <= 9 {
@@ -62,11 +61,9 @@ func FirstStar(f []byte) (res int) {
 					res += num
 					nextToSymbol = false
 				}
-				curRow++
 				numStr = ""
 			}
 		} else if num, err := strconv.Atoi(numStr); err == nil && len(numStr) > 0 && nextToSymbol {
-			fmt.Println(num)
 			res += num
 			nextToSymbol = false
 			numStr = ""
