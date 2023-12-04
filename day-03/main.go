@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"regexp"
 	"strconv"
 )
 
@@ -13,7 +14,7 @@ const (
 )
 
 func main() {
-	input := ParseFileToBytes("example.txt")
+	input := ParseFileToBytes("input.txt")
 	fmt.Println("Welcome to day 3")
 
 	first := FirstStar(input)
@@ -23,6 +24,115 @@ func main() {
 	fmt.Printf(`Second Star result: %v%v`, second, "\r\n")
 
 }
+
+// func FirstStar(f []byte) (res int) {
+// 	var rowLen int
+// 	var noLBs []byte
+
+// 	for i, v := range f {
+// 		if v == 10 || v == 13 {
+// 			if rowLen == 0 {
+// 				rowLen = i
+// 			}
+// 			continue
+// 		}
+// 		noLBs = append(noLBs, v)
+// 	}
+
+// 	lastByte := byte(46)
+// 	var numStr string
+// 	indexMap := map[int]map[int]bool{}
+// 	tempAdjacentI := map[int]bool{}
+// 	for i, v := range noLBs {
+// 		if num := v - 48; num >= 0 && num <= 9 {
+// 			if len(numStr) == 0 {
+// 				numStr = strconv.Itoa(int(num))
+// 			} else if lastByte-48 >= 0 && lastByte-48 <= 9 {
+// 				numStr += strconv.Itoa(int(num))
+// 			}
+// 			adjacentI := FindAdjacentIndices(i, rowLen, len(noLBs))
+// 			for _, v := range adjacentI {
+// 				tempAdjacentI[v] = true
+// 			}
+// 		} else {
+// 			numKey, err := strconv.Atoi(numStr)
+// 			if err == nil {
+// 				if w, ok := indexMap[numKey]; ok {
+// 					for k, v := range tempAdjacentI {
+// 						w[k] = v
+// 					}
+// 				} else {
+// 					indexMap[numKey] = tempAdjacentI
+// 				}
+// 				tempAdjacentI = map[int]bool{}
+// 				numStr = ""
+// 			}
+// 		}
+// 		lastByte = v
+// 	}
+
+// 	for k, v := range indexMap {
+// 		for j := range v {
+// 			if regexp.MustCompile("[^\\w.]").Match([]byte{noLBs[j]}) {
+// 				res += k
+// 				// break
+// 			}
+// 		}
+// 	}
+// 	return
+// }
+
+// func FirstStar(f []byte) (res int) {
+//     var rowLen int
+// 	var noLBs []byte
+
+// 	for i, v := range f {
+// 		if v == 10 || v == 13 {
+// 			if rowLen == 0 {
+// 				rowLen = i
+// 			}
+// 			continue
+// 		}
+// 		noLBs = append(noLBs, v)
+// 	}
+
+//     lastByte := byte(46)
+// 	var numStr string
+// 	indexMap := map[int]int{}
+//     tempIdxSlice := []int{}
+
+// 	for i, v := range noLBs {
+// 		if num := v - 48; num >= 0 && num <= 9 {
+// 			if len(numStr) == 0 {
+// 				numStr = strconv.Itoa(int(num))
+// 			} else if lastByte-48 >= 0 && lastByte-48 <= 9 {
+// 				numStr += strconv.Itoa(int(num))
+// 			}
+// 			tempIdxSlice = append(tempIdxSlice, i)
+// 		} else {
+// 			num, err := strconv.Atoi(numStr)
+// 			if err == nil {
+// 				for _, v := range tempIdxSlice {
+//                     indexMap[v] = num
+//                 }
+//                 tempIdxSlice = []int{}
+// 				numStr = ""
+// 			}
+// 		}
+// 		lastByte = v
+// 	}
+
+//     for i, v := range noLBs {
+//         if regexp.MustCompile("[^\\w.]").Match([]byte{v}) {
+//             adjI := FindAdjacentIndices(i, rowLen, len(noLBs))
+// fmt.Println(adjI)
+//             // for _, w := range adjI {
+
+//             // }
+//         }
+//     }
+//     return
+// }
 
 func FirstStar(f []byte) (res int) {
 	var rowLen int
@@ -38,30 +148,31 @@ func FirstStar(f []byte) (res int) {
 		noLBs = append(noLBs, v)
 	}
 
-	// adjacent := []int{}
-	lastByte := byte(46)
+	var nextToSymbol bool
 	var numStr string
-	indexMap := map[int][]int{}
-	var tempISlice []int
-	for i, v := range f {
-		if num := v - 48; num >= 0 && num <= 9 {
-			if len(numStr) == 0 {
-				numStr = string(rune(num))
-			} else if lastByte -48 >= 0 && lastByte - 48 <= 9 {
-				numStr += string(rune(num)) 
-			}
-			tempISlice = append(tempISlice, i)
-		} else {
-			numKey, err := strconv.Atoi(numStr); if err == nil {
-				indexMap[numKey] = tempISlice
-				tempISlice = []int{}
-				numStr = ""
-			}
-		}
-		lastByte = v
-	}
-	fmt.Println(indexMap)
 
+	for i, v := range noLBs {
+		if by := v - 48; by >= 0 && by <= 9 {
+			if len(numStr) == 0 {
+				numStr = strconv.Itoa(int(by))
+			} else {
+				numStr += strconv.Itoa(int(by))
+			}
+			adjacentIs := FindAdjacentIndices(i, rowLen, len(noLBs))
+			for _, x := range adjacentIs {
+				if regexp.MustCompile("[^\\w.]").Match([]byte{noLBs[x]}) {
+					nextToSymbol = true
+					break
+				}
+			}
+		} else if num, err := strconv.Atoi(numStr); err == nil && len(numStr) > 0 && nextToSymbol {
+			res += num
+			nextToSymbol = false
+            numStr = ""
+		} else {
+			numStr = ""
+		}
+	}
 	return
 }
 
@@ -70,7 +181,7 @@ func SecondStar(f []byte) (res int) {
 	return
 }
 
-func FindAdjacentIndicies(i int, rowLen int, arLen int) (adjacentIndicies []int) {
+func FindAdjacentIndices(i int, rowLen int, arLen int) (adjacentIndicies []int) {
 	left := dir(i, rowLen, LEFT)
 	right := dir(i, rowLen, RIGHT)
 	below := dir(i, rowLen, DOWN)
