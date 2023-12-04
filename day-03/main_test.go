@@ -62,6 +62,16 @@ func TestFirstStar(t *testing.T) {
 	}
 }
 
+func TestSecondStar(t *testing.T) {
+	input := ParseFileToBytes("example.txt")
+	want := 467835
+	res := SecondStar(input)
+
+	if res != want {
+		t.Fatalf(`Expected SecondStar(%v) to equal %v, instead got %v.%v`, input, want, res, "\r\n")
+	}
+}
+
 func TestFindAdjacentIndices(t *testing.T) {
 	i := 14
 	rowLen := 10

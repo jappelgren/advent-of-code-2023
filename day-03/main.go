@@ -56,7 +56,7 @@ func FirstStar(f []byte) (res int) {
 					break
 				}
 			}
-			if num, err := strconv.Atoi(numStr); err == nil && (i + 1) % rowLen == 0 {
+			if num, err := strconv.Atoi(numStr); err == nil && (i+1)%rowLen == 0 {
 				if nextToSymbol {
 					res += num
 					nextToSymbol = false
@@ -75,7 +75,60 @@ func FirstStar(f []byte) (res int) {
 }
 
 func SecondStar(f []byte) (res int) {
-	res = 0
+	var rowLen int
+	var noLBs []byte
+
+	for i, v := range f {
+		if v == 10 || v == 13 {
+			if rowLen == 0 {
+				rowLen = i
+			}
+			continue
+		}
+		noLBs = append(noLBs, v)
+	}
+
+	var numStr string
+	gearMap := map[int][]int{}
+	gearI := -1
+
+	for i, v := range noLBs {
+		if by := v - 48; by >= 0 && by <= 9 {
+			if len(numStr) == 0 {
+				numStr = strconv.Itoa(int(by))
+			} else {
+				numStr += strconv.Itoa(int(by))
+			}
+			adjacentIs := FindAdjacentIndices(i, rowLen, len(noLBs))
+			for _, x := range adjacentIs {
+				if noLBs[x] == '*' {
+					gearI = x
+				}
+			}
+			if num, err := strconv.Atoi(numStr); err == nil && (i+1)%rowLen == 0 {
+				if gearI >= 0 {
+					gearMap[gearI] = append(gearMap[gearI], num)
+					gearI = -1
+				}
+				numStr = ""
+			}
+		} else if num, err := strconv.Atoi(numStr); err == nil && len(numStr) > 0 && gearI >= 0 {
+			gearMap[gearI] = append(gearMap[gearI], num)
+			gearI = -1
+			numStr = ""
+		} else {
+			numStr = ""
+		}
+	}
+	for _, v := range gearMap {
+		product := 1
+		if len(v) > 1 {
+			for _, w := range v {
+				product = product * w
+			}
+			res += product
+		}
+	}
 	return
 }
 
