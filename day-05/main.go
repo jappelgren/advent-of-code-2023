@@ -7,21 +7,21 @@ import (
 )
 
 func main() {
-	input := ParseFileToStringByNewLine("example.txt")
+	input := ParseFileToStringByNewLine("input.txt")
 	fmt.Println("Welcome to day 5")
 
 	first := FirstStar(input, InitSeedToSoil)
 	fmt.Printf(`First Star result: %v%v`, first, "\r\n")
 
-	// second := SecondStar(input, InitSeedToSoilV2)
-	// fmt.Printf(`Second Star result: %v%v`, second, "\r\n")
+	second := SecondStar(input, InitSeedToSoilV2)
+	fmt.Printf(`Second Star result: %v%v`, second, "\r\n")
 }
 
 type initFunc func(string, map[int]int)
 
-func FirstStar(f []string, init initFunc ) (res uint64) {
+func FirstStar(f []string, init initFunc) (res uint64) {
 	res = ^uint64(0)
-	
+
 	seedToSoil := map[int]int{}
 	soilToFertilizer := map[int]int{}
 	fertilizerToWater := map[int]int{}
@@ -32,7 +32,7 @@ func FirstStar(f []string, init initFunc ) (res uint64) {
 
 	curMap := seedToSoil
 	nextMap := soilToFertilizer
-	
+
 	for i, v := range f {
 		if i == 0 {
 			init(v, seedToSoil)
@@ -42,7 +42,7 @@ func FirstStar(f []string, init initFunc ) (res uint64) {
 		if v == "" {
 			continue
 		}
-		
+
 		switch v {
 		case "seed-to-soil map:":
 			break
@@ -76,7 +76,7 @@ func FirstStar(f []string, init initFunc ) (res uint64) {
 			var sourceFloor int
 			var sourceCeil int
 			var valRange int
-			
+
 			for j, w := range mapVals {
 				if x, err := strconv.Atoi(w); err == nil {
 					switch j {
@@ -86,7 +86,7 @@ func FirstStar(f []string, init initFunc ) (res uint64) {
 						sourceFloor = x
 					case 2:
 						valRange = x
-						sourceCeil = sourceFloor + valRange -1
+						sourceCeil = sourceFloor + valRange - 1
 					}
 				}
 			}
@@ -101,14 +101,13 @@ func FirstStar(f []string, init initFunc ) (res uint64) {
 			}
 		}
 	}
-	
+
 	for _, v := range seedToSoil {
 		seedToLocation := humidityToLocation[tempToHumidity[lightToTemp[waterToLight[fertilizerToWater[soilToFertilizer[v]]]]]]
 		if uint64(seedToLocation) < res {
 			res = uint64(seedToLocation)
 		}
 	}
-	fmt.Println(seedToSoil,soilToFertilizer,fertilizerToWater,waterToLight,lightToTemp,tempToHumidity,humidityToLocation)
 	return
 }
 
@@ -130,7 +129,7 @@ func InitSeedToSoil(v string, seedToSoil map[int]int) {
 func InitSeedToSoilV2(v string, seedToSoil map[int]int) {
 	seedIdsStr := regexp.MustCompile("seeds:\\s").ReplaceAll([]byte(v), []byte(""))
 	seedIds := regexp.MustCompile("\\s").Split(string(seedIdsStr), -1)
-	for i := 0; i < len(seedIds); i +=2 {
+	for i := 0; i < len(seedIds); i += 2 {
 		floor := 0
 		ceil := 0
 		if num, err := strconv.Atoi(seedIds[i]); err == nil {
@@ -140,8 +139,8 @@ func InitSeedToSoilV2(v string, seedToSoil map[int]int) {
 			ceil = floor + num - 1
 		}
 		for j := floor; j <= ceil; j++ {
-				seedToSoil[j] = j
+			seedToSoil[j] = j
 		}
 	}
-	
+
 }
